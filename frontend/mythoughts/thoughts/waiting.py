@@ -19,7 +19,12 @@ def check_current_position(request_id: str):
         "event_id": event_id,
         "request_id": request_id
     }
-    body = requests.get(WAITING_ROOM_API_URL + "/queue_num", params=params).json()
+    while True:
+        response = requests.get(WAITING_ROOM_API_URL + "/queue_num", params=params)
+        if response.status_code == 200:
+            body = response.json()
+            break
+        time.sleep(5)  # Wait for 5 seconds before retrying
     queue_number = int(body["queue_number"])
     return queue_number
 
