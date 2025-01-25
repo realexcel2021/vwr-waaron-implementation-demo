@@ -21,7 +21,7 @@ def list_thoughts(request):
     '''
     username = get_username_from_session(request)
     if not username:
-        return redirect('login')
+        return redirect('waiting')
 
     url = settings.THOUGHTS_BACKEND + '/api/me/thoughts/'
     headers = {
@@ -29,7 +29,7 @@ def list_thoughts(request):
     }
     result = requests.get(url, headers=headers)
     if result.status_code != http.client.OK:
-        return redirect('login')
+        return redirect('waiting')
 
     context = {
         'thoughts': result.json(),
@@ -55,6 +55,6 @@ def new_thought(request):
         }
         result = requests.post(new_url, data, headers=headers)
         if result.status_code != http.client.CREATED:
-            return redirect('login')
+            return redirect('waiting')
 
     return redirect('list-thoughts')
