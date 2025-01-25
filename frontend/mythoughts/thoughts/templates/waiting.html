@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Waiting Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .queue-info {
+            margin-bottom: 20px;
+        }
+        .queue-info p {
+            margin: 10px 0;
+            font-size: 18px;;
+        }
+        .proceed-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .proceed-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Waiting Room</h1>
+    <div class="container">
+        <div class="queue-info">
+            <p>Your current position: <span id="userPosition">{{current_position}}</span></p>
+            <p>Total Allowed cuncurrently: <span id="totalUsers">{{total_users}}</span></p>
+        </div>
+        {% if leave_queue %}
+        <button class="proceed-button" onclick="proceedToLogin()">Proceed</button>
+        {% endif %}
+    </div>
+
+    <script>
+    
+        function proceedToLogin() {
+            window.location.href = '/login';
+        }
+
+        function updateQueueNumber() {
+            fetch('/get_queue_number/')
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('#queue-number').innerText = data.queue_number;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        setInterval(updateQueueNumber, 5000); // Poll every 5 seconds
+
+
+    </script>
+</body>
+</html>
